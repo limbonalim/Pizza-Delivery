@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {fetchDish, fetchDishes} from './adminThunks';
+import {fetchDeleteDish, fetchDish, fetchDishes} from './adminThunks';
 import {RootState} from '../app/store';
 import {Dish} from '../types';
 
@@ -20,6 +20,10 @@ const adminSlice = createSlice({
     clearEditDish: (state) => {
       state.editDish = null;
       console.log('clear');
+    },
+    setDeletingDish: (state, {payload: id}) => {
+      const index = state.dishes.findIndex((item) => item.id === id);
+      state.dishes[index].isDeleting = true;
     }
   },
   extraReducers: (builder) => {
@@ -44,11 +48,22 @@ const adminSlice = createSlice({
     builder.addCase(fetchDish.rejected, (state) => {
       console.log('[fetchOne.rejected] ' + state);
     });
+    builder.addCase(fetchDeleteDish.pending, (state) => {
+      console.log('[fetchDeleteDish.pending] ' + state);
+
+    });
+    builder.addCase(fetchDeleteDish.fulfilled, (state) => {
+      console.log('[fetchDeleteDish.fulfilled] ' + state);
+
+    });
+    builder.addCase(fetchDeleteDish.rejected, (state) => {
+      console.log('[fetchDeleteDish.rejected] ' + state);
+    });
   }
 });
 
 export const selectDishes = (state: RootState) => state.admin.dishes;
 export const selectEditDish = (state: RootState) => state.admin.editDish;
 
-export const {clearEditDish} = adminSlice.actions;
+export const {clearEditDish, setDeletingDish} = adminSlice.actions;
 export const adminReducers = adminSlice.reducer;

@@ -1,6 +1,6 @@
 import {useEffect} from 'react';
 import {Link} from 'react-router-dom';
-import Dish from '../../components/Dish/Dish';
+import MemoDish from '../../components/Dish/Dish';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {selectDishes} from '../../store/adminSlice';
 import {fetchDishes} from '../../store/adminThunks';
@@ -20,12 +20,13 @@ const Admin = () => {
       </div>
       <div className="d-flex flex-column gap-2">
         {dishes.map((item) => (
-          <Dish
+          <MemoDish
             key={item.id}
             id={item.id}
             title={item.title}
             price={item.price}
             image={item.image}
+            isDeleting={item.isDeleting}
             isShowButtons
           />
         ))}

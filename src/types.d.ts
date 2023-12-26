@@ -7,9 +7,10 @@ interface Dish {
   title: string;
   price: number;
   image: string;
+  isDeleting: boolean;
 }
 
-type ApiDish = Omit<Dish, 'id'>
+type ApiDish = Omit<Dish, 'id', 'isDeleting'>
 
 export interface EditDish {
   id: string;

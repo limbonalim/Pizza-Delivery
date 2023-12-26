@@ -2,7 +2,7 @@ import {ChangeEvent, FormEvent, useEffect, useState} from 'react';
 import {Link, useNavigate, useParams} from 'react-router-dom';
 import noImage from '../../assets/NoImage.png';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import {createDish, fetchDish, fetchEditDish} from '../../store/adminThunks';
+import {createDish, fetchDish, fetchDishes, fetchEditDish} from '../../store/adminThunks';
 import {clearEditDish, selectEditDish} from '../../store/adminSlice';
 import {ApiDish, EditDish} from '../../types';
 import './DishForm.css';
@@ -64,7 +64,7 @@ const DishForm = () => {
     }));
   };
 
-  const onSubmit = (e: FormEvent) => {
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const data: ApiDish = {
       title: dish.title,
@@ -77,10 +77,11 @@ const DishForm = () => {
         id,
         dish: data
       };
-      dispatch(fetchEditDish(editDish));
+      await dispatch(fetchEditDish(editDish));
     } else {
-      dispatch(createDish(data));
+      await dispatch(createDish(data));
     }
+    dispatch(fetchDishes());
     navigate('/admin');
   };
 

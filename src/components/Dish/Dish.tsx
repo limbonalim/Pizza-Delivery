@@ -1,22 +1,43 @@
 import React from 'react';
 import './Dish.css';
 import {Link} from 'react-router-dom';
+import {useAppDispatch} from '../../app/hooks';
+import {fetchDeleteDish, fetchDishes} from '../../store/adminThunks';
+import {setDeletingDish} from '../../store/adminSlice';
 
 interface Props {
   id: string;
   title: string;
   price: number;
   image: string;
+  isDeleting?: boolean;
   isShowButtons?: boolean;
 }
 
-const Dish: React.FC<Props> = ({title, price, image, id, isShowButtons}) => {
+const MemoDish: React.FC<Props> = React.memo(function Dish({title, price, image, id, isDeleting, isShowButtons}) {
+  const dispatch = useAppDispatch();
   const path = `/admin/edit/${id}`;
+
+  const getDeleting = async () => {
+    dispatch(setDeletingDish(id));
+    await dispatch(fetchDeleteDish(id));
+    dispatch(fetchDishes());
+  };
 
   let buttons = isShowButtons && (
     <div className="d-flex gap-2 align-self-center buttons">
-      <button className="btn btn-outline-danger">Delete</button>
-      <Link className="btn btn-outline-primary" to={path}>Edit</Link>
+      <button
+        onClick={getDeleting}
+        disabled={isDeleting}
+        className="btn btn-outline-danger"
+      >Delete
+      </button>
+      {isDeleting ? null :
+        <Link
+          className="btn btn-outline-primary"
+          to={path}
+        >Edit</Link>
+      }
     </div>
   );
 
@@ -33,6 +54,6 @@ const Dish: React.FC<Props> = ({title, price, image, id, isShowButtons}) => {
       {buttons}
     </div>
   );
-};
+});
 
-export default Dish;
+export default MemoDish;

@@ -32,6 +32,7 @@ export const fetchDish = createAsyncThunk<Dish | null, string>(
     if (data) {
       return {
         ...data,
+        isDeleting: false,
         id
       };
     }
@@ -56,6 +57,16 @@ export const fetchEditDish = createAsyncThunk<void, EditDish>(
   'admin/fetchEditDish',
   async ({dish, id}) => {
     const response = await axiosApi.put(`/dishes/${id}.json`, dish);
+    if (response.status !== 200) {
+      console.log('TODO something');
+    }
+  }
+);
+
+export const fetchDeleteDish = createAsyncThunk<void, string>(
+  'admin/fetchDeleteDish',
+  async (id) => {
+    const response = await axiosApi.delete(`/dishes/${id}.json`);
     if (response.status !== 200) {
       console.log('TODO something');
     }
