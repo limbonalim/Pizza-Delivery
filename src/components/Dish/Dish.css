@@ -4,14 +4,39 @@
   border-radius: 1em;
 }
 
-@media screen and (max-width: 770px) {
-  .Dish img {
-    max-width: 100px;
+@media screen and (min-width: 770px) {
+
+  .Dish .title {
+    width: 200px;
   }
 }
 
-@media screen and (max-width: 450px) {
+@media screen and (max-width: 770px) {
+  .Dish img {
+    max-width: 80px;
+  }
+
+  .Dish .title {
+    width: 150px;
+  }
+}
+
+@media screen and (max-width: 500px) {
   .Dish .buttons {
     margin: 0 auto;
+  }
+
+  .Dish .title {
+    width: 90px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .Dish .title {
+    font-size: 12px;
+  }
+
+  .Dish .price {
+    font-size: 10px;
   }
 }

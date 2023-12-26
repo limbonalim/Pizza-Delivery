@@ -1,7 +1,11 @@
-import {ChangeEvent, FormEvent, useState} from 'react';
-import {Link, useParams} from 'react-router-dom';
+import {ChangeEvent, FormEvent, useEffect, useState} from 'react';
+import {Link, useNavigate, useParams} from 'react-router-dom';
 import noImage from '../../assets/NoImage.png';
-import './DishForm.tsx.css';
+import {useAppDispatch, useAppSelector} from '../../app/hooks';
+import {createDish, fetchDish, fetchEditDish} from '../../store/adminThunks';
+import {clearEditDish, selectEditDish} from '../../store/adminSlice';
+import {ApiDish, EditDish} from '../../types';
+import './DishForm.css';
 
 interface FormDish {
   title: string;
@@ -15,7 +19,10 @@ const DishForm = () => {
     price: '',
     image: ''
   });
+  const dispatch = useAppDispatch();
+  const editDish = useAppSelector(selectEditDish);
   const {id} = useParams();
+  const navigate = useNavigate();
 
   let photo = (
     <img
@@ -24,6 +31,28 @@ const DishForm = () => {
       alt="No Photo"
     />
   );
+
+
+  const getEditDish = async (id: string) => {
+    await dispatch(fetchDish(id));
+  };
+
+  useEffect(() => {
+    if (id) {
+      void getEditDish(id);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (editDish) {
+      setDish({
+        title: editDish.title,
+        price: editDish.price.toString(),
+        image: editDish.image
+      });
+      dispatch(clearEditDish());
+    }
+  }, [editDish]);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const {name, value} = e.target;
@@ -37,7 +66,22 @@ const DishForm = () => {
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-    console.log(dish);
+    const data: ApiDish = {
+      title: dish.title,
+      price: parseFloat(dish.price),
+      image: dish.image,
+    };
+
+    if (id) {
+      const editDish: EditDish = {
+        id,
+        dish: data
+      };
+      dispatch(fetchEditDish(editDish));
+    } else {
+      dispatch(createDish(data));
+    }
+    navigate('/admin');
   };
 
   if (dish.image) {
@@ -103,13 +147,11 @@ const DishForm = () => {
       </div>
       <div className="d-flex gap-3">
         <button
-
           className="btn btn-outline-success"
           type="submit"
         >{id ? 'Edit' : 'Save'}</button>
         <Link
-
-          to="/"
+          to="/admin"
           className="btn btn-outline-primary"
         >Back to Admin panel</Link>
       </div>

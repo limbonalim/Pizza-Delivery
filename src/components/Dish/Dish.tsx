@@ -7,12 +7,11 @@ interface Props {
   title: string;
   price: number;
   image: string;
-  isShowButtons: boolean;
+  isShowButtons?: boolean;
 }
 
 const Dish: React.FC<Props> = ({title, price, image, id, isShowButtons}) => {
-  const path = id ? `/edit/${id}` : '/';
-
+  const path = `/admin/edit/${id}`;
 
   let buttons = isShowButtons && (
     <div className="d-flex gap-2 align-self-center buttons">
@@ -28,9 +27,9 @@ const Dish: React.FC<Props> = ({title, price, image, id, isShowButtons}) => {
           src={image}
           alt={title}
         />
-        <span>{title}</span>
+        <span className="title">{title}</span>
       </div>
-      <span>{price} KGS</span>
+      <span className="price">{price} KGS</span>
       {buttons}
     </div>
   );

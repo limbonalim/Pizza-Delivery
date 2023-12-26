@@ -10,3 +10,8 @@ interface Dish {
 }
 
 type ApiDish = Omit<Dish, 'id'>
+
+export interface EditDish {
+  id: string;
+  dish: ApiDish;
+}
