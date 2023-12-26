@@ -2,8 +2,8 @@ import {ChangeEvent, FormEvent, useEffect, useState} from 'react';
 import {Link, useNavigate, useParams} from 'react-router-dom';
 import noImage from '../../assets/NoImage.png';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import {createDish, fetchDish, fetchDishes, fetchEditDish} from '../../store/adminThunks';
-import {clearEditDish, selectEditDish} from '../../store/adminSlice';
+import {createDish, fetchDish, fetchDishes, fetchEditDish} from '../../store/adminSlice/adminThunks';
+import {clearEditDish, selectEditDish} from '../../store/adminSlice/adminSlice';
 import {ApiDish, EditDish} from '../../types';
 import './DishForm.css';
 
@@ -31,7 +31,6 @@ const DishForm = () => {
       alt="No Photo"
     />
   );
-
 
   const getEditDish = async (id: string) => {
     await dispatch(fetchDish(id));

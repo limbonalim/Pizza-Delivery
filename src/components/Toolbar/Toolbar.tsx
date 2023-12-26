@@ -27,7 +27,7 @@ const Toolbar = () => {
     <nav className="navbar bg-body-tertiary">
       <div className="container-fluid">
         <div>
-          <Link className="navbar-brand" to="/">Navbar</Link>
+          <Link className="navbar-brand" to="/">Pizza Delivery</Link>
           {marker}
         </div>
         {adminMenu}

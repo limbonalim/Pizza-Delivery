@@ -1,7 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {fetchDeleteDish, fetchDish, fetchDishes} from './adminThunks';
-import {RootState} from '../app/store';
-import {Dish} from '../types';
+import {RootState} from '../../app/store';
+import {Dish} from '../../types';
 
 interface AdminState {
   dishes: Dish[];
@@ -19,7 +19,6 @@ const adminSlice = createSlice({
   reducers: {
     clearEditDish: (state) => {
       state.editDish = null;
-      console.log('clear');
     },
     setDeletingDish: (state, {payload: id}) => {
       const index = state.dishes.findIndex((item) => item.id === id);

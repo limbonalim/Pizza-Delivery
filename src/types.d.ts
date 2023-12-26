@@ -2,6 +2,10 @@ interface ApiAnswer {
   [id: string]: ApiDish;
 }
 
+interface Cart {
+  [id: string]: number;
+}
+
 interface Dish {
   id: string;
   title: string;
