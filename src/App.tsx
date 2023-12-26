@@ -2,9 +2,9 @@ import {Route, Routes} from 'react-router-dom';
 import Layout from './containers/Layout/Layout';
 import Home from './containers/Home/Home';
 import NotFound from './containers/NotFound/NotFound';
-import Admin from "./containers/Admin/Admin";
-import Orders from "./containers/Orders/Orders";
-import DishForm from "./containers/DishForm/DishForm";
+import Admin from './containers/Admin/Admin';
+import Orders from './containers/Orders/Orders';
+import DishForm from './containers/DishForm/DishForm';
 
 const App = () => {
 
@@ -21,13 +21,6 @@ const App = () => {
           <Route path="*" element={(<NotFound/>)}/>
         </Routes>
       </Layout>
-      {/*<Dish*/}
-      {/*  id="someId"*/}
-      {/*  isShowButtons={true}*/}
-      {/*  title="Some Dish"*/}
-      {/*  price={320}*/}
-      {/*  image="https://t1.gstatic.com/licensed-image?q=tbn:ANd9GcSVhJ46pOBVylg5_ZnYilSr14xSgJwSZ386f8C6hRKrA0MRiCpn2ozG-Bfcxa3bSdJ-"*/}
-      {/*></Dish>*/}
     </>
   );
 };

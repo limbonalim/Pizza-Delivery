@@ -1,7 +1,8 @@
 import React, {PropsWithChildren} from 'react';
 import Toolbar from '../../components/Toolbar/Toolbar';
 
-interface Props extends PropsWithChildren {}
+interface Props extends PropsWithChildren {
+}
 
 const Layout: React.FC<Props> = ({children}) => {
   return (
@@ -9,7 +10,7 @@ const Layout: React.FC<Props> = ({children}) => {
       <header className="mb-5">
         <Toolbar/>
       </header>
-      <main>
+      <main className="container">
         {children}
       </main>
     </>
