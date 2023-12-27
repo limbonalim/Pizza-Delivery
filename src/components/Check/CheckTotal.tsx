@@ -69,8 +69,8 @@ const CheckTotal = () => {
       </div>
       <div className="pb-3 justfy-center">
         <div className="d-flex flex-column text-center gap-2">
-          <span>Total: {total} KGS</span>
-          <span>Delivery: {DELIVERY} KGS</span>
+          <span>Total: {total + DELIVERY} KGS</span>
+          <span className="text-secondary">Delivery: {DELIVERY} KGS</span>
           <div>
             <Button variant="secondary" className="me-2" onClick={handleCancel}>
               Cancel

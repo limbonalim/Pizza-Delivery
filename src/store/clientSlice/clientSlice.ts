@@ -1,7 +1,6 @@
 import {Cart} from '../../types';
 import {createSlice} from '@reduxjs/toolkit';
 import {RootState} from '../../app/store';
-import {DELIVERY} from '../../constants';
 import {createOrder} from './clientThunks';
 
 interface ClientState {
@@ -40,9 +39,8 @@ const clientSlice = createSlice({
       state.cart = {};
       state.total = 0;
     },
-    showCheckoutModal: (state, {payload: total}) => {
+    showCheckoutModal: (state) => {
       state.isShowCheckoutModal = true;
-      state.total = total + DELIVERY;
     },
     closeCheckoutModal: (state) => {
       state.isShowCheckoutModal = false;
@@ -52,6 +50,9 @@ const clientSlice = createSlice({
     },
     closeCheckForm: (state) => {
       state.isShowCheckForm = false;
+    },
+    getTotal: (state, {payload: total}) => {
+      state.total = total;
     }
   },
   extraReducers: (builder) => {
@@ -79,7 +80,8 @@ export const {
   showCheckoutModal,
   closeCheckoutModal,
   showCheckForm,
-  closeCheckForm
+  closeCheckForm,
+  getTotal,
 } = clientSlice.actions;
 
 export const clientReducers = clientSlice.reducer;

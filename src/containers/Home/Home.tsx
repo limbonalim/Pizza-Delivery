@@ -4,7 +4,7 @@ import MemoDish from '../../components/Dish/Dish';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {selectDishes} from '../../store/adminSlice/adminSlice';
 import {fetchDishes} from '../../store/adminSlice/adminThunks';
-import {selectCart, showCheckoutModal} from '../../store/clientSlice/clientSlice';
+import {getTotal, selectCart, showCheckoutModal} from '../../store/clientSlice/clientSlice';
 import CheckModal from '../../components/Check/CheckModal';
 import './Home.css';
 
@@ -23,6 +23,7 @@ const Home = () => {
       return acc;
     }, 0);
     setTotal(sum);
+    dispatch(getTotal(sum));
   }, [cart]);
 
   useEffect(() => {
@@ -39,7 +40,7 @@ const Home = () => {
   }
 
   const checkout = () => {
-    dispatch(showCheckoutModal(total));
+    dispatch(showCheckoutModal());
   };
 
   let sumBlock: React.JSX.Element | null = (

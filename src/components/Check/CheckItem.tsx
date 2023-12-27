@@ -18,7 +18,7 @@ const MemoCheckItem: React.FC<Props> = React.memo(function CheckItem({id, title,
       <span className="title">{title}</span>
       <div className="d-flex align-items-center gap-1 info">
         <span className="text-nowrap text-secondary">X {quantity} |</span>
-        <span className="text-nowrap">{price} KGS</span>
+        <span className="text-nowrap">{price * quantity} KGS</span>
         <button
           onClick={() => dispatch(deleteItemFromCart(id))}
           className="btn btn-outline-danger"
