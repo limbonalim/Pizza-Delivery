@@ -11,6 +11,8 @@ const Orders = () => {
 
   useEffect(() => {
     dispatch(fetchDishes());
+  }, []);
+  useEffect(() => {
     dispatch(fetchOrders());
   }, []);
 

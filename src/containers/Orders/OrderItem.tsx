@@ -2,6 +2,8 @@ import React, {useMemo, useState} from 'react';
 import {Order} from '../../types';
 import {DELIVERY} from '../../constants';
 import './OrderItem.css';
+import {useAppDispatch} from '../../app/hooks';
+import {fetchDeleteOrder, fetchOrders} from '../../store/adminSlice/adminThunks';
 
 
 interface Props {
@@ -11,6 +13,7 @@ interface Props {
 const MemoOrderItem: React.FC<Props> = React.memo(function OrderItem({order}) {
   const [total, setTotal] = useState<number>(0);
   const [isShowInfo, setIsShowInfo] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
   let info;
 
   useMemo(() => {
@@ -22,6 +25,11 @@ const MemoOrderItem: React.FC<Props> = React.memo(function OrderItem({order}) {
   const editPhone = (phone: string) => {
     const edit = phone.split('');
     return `+996 (${edit[0]}${edit[1]}${edit[2]}) ${edit[3]}${edit[4]}-${edit[5]}${edit[6]}-${edit[7]}${edit[8]}`;
+  };
+
+  const handleComplete = async () => {
+    await dispatch(fetchDeleteOrder(order.id));
+    dispatch(fetchOrders());
   };
 
   if (isShowInfo) {
@@ -57,7 +65,11 @@ const MemoOrderItem: React.FC<Props> = React.memo(function OrderItem({order}) {
             className="btn btn-outline-info text-nowrap"
           >{isShowInfo ? 'Close' : 'Show'} info
           </button>
-          <button className="btn btn-outline-success">Complete</button>
+          <button
+            onClick={handleComplete}
+            className="btn btn-outline-success"
+          >Complete
+          </button>
         </div>
       </div>
     </div>

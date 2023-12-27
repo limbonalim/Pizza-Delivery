@@ -93,3 +93,13 @@ export const fetchOrders = createAsyncThunk<ApiOrder[]>(
     return [];
   }
 );
+
+export const fetchDeleteOrder = createAsyncThunk<void, string>(
+  'admin/fetchDeleteOrder',
+  async (id) => {
+    const response = await axiosApi.delete(`/orders/${id}.json`);
+    if (response.status !== 200) {
+      console.log('TODO something');
+    }
+  }
+);

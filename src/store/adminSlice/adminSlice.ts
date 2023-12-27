@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {fetchDeleteDish, fetchDish, fetchDishes, fetchOrders} from './adminThunks';
+import {fetchDeleteDish, fetchDeleteOrder, fetchDish, fetchDishes, fetchOrders} from './adminThunks';
 import {RootState} from '../../app/store';
 import {Dish, Order} from '../../types';
 
@@ -92,6 +92,17 @@ const adminSlice = createSlice({
     });
     builder.addCase(fetchOrders.rejected, (state) => {
       console.log('[fetchOrders.rejected] ' + state);
+    });
+    builder.addCase(fetchDeleteOrder.pending, (state) => {
+      console.log('[fetchDeleteOrder.pending] ' + state);
+
+    });
+    builder.addCase(fetchDeleteOrder.fulfilled, (state) => {
+      console.log('[fetchDeleteOrder.fulfilled] ' + state);
+
+    });
+    builder.addCase(fetchDeleteOrder.rejected, (state) => {
+      console.log('[fetchDeleteOrder.rejected] ' + state);
     });
   }
 });
