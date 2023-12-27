@@ -1,0 +1,9 @@
+@media screen and (max-width: 500px) {
+  .CheckItem .title {
+    font-size: 13px;
+  }
+
+  .CheckItem .info {
+    font-size: 11px;
+  }
+}
