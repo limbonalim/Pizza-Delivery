@@ -1,16 +1,18 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {fetchDeleteDish, fetchDish, fetchDishes} from './adminThunks';
+import {fetchDeleteDish, fetchDish, fetchDishes, fetchOrders} from './adminThunks';
 import {RootState} from '../../app/store';
-import {Dish} from '../../types';
+import {Dish, Order} from '../../types';
 
 interface AdminState {
   dishes: Dish[];
+  orders: Order[];
   editDish: Dish | null;
 }
 
 const initialState: AdminState = {
   dishes: [],
-  editDish: null
+  orders: [],
+  editDish: null,
 };
 
 const adminSlice = createSlice({
@@ -23,7 +25,7 @@ const adminSlice = createSlice({
     setDeletingDish: (state, {payload: id}) => {
       const index = state.dishes.findIndex((item) => item.id === id);
       state.dishes[index].isDeleting = true;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchDishes.pending, (state) => {
@@ -58,10 +60,44 @@ const adminSlice = createSlice({
     builder.addCase(fetchDeleteDish.rejected, (state) => {
       console.log('[fetchDeleteDish.rejected] ' + state);
     });
+    builder.addCase(fetchOrders.pending, (state) => {
+      console.log('[fetchOrders.pending] ' + state);
+
+    });
+    builder.addCase(fetchOrders.fulfilled, (state, {payload: orders}) => {
+      console.log('[fetchOrders.fulfilled] ' + state);
+      if (state.dishes.length > 0 && orders.length > 0) {
+        state.orders = orders.map((item) => {
+          return {
+            client: item.client,
+            id: item.id,
+            dishes: Object.keys(item.order).map((id) => {
+              const index = state.dishes.findIndex((dish) => id === dish.id);
+              if (index === -1) {
+                return {
+                  title: 'ERROR!',
+                  quantity: item.order[id],
+                  price: 0
+                };
+              }
+              return {
+                title: state.dishes[index].title,
+                quantity: item.order[id],
+                price: state.dishes[index].price
+              };
+            }),
+          };
+        });
+      }
+    });
+    builder.addCase(fetchOrders.rejected, (state) => {
+      console.log('[fetchOrders.rejected] ' + state);
+    });
   }
 });
 
 export const selectDishes = (state: RootState) => state.admin.dishes;
+export const selectOrders = (state: RootState) => state.admin.orders;
 export const selectEditDish = (state: RootState) => state.admin.editDish;
 
 export const {clearEditDish, setDeletingDish} = adminSlice.actions;

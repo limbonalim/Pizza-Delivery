@@ -1,13 +1,16 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {axiosApi} from '../../axios-Api';
-import {ApiAnswer, ApiDish, Dish, EditDish} from '../../types';
+import {ApiDishes, ApiDish, Dish, EditDish, ApiOrders, ApiOrder} from '../../types';
 
 
 export const fetchDishes = createAsyncThunk<Dish[]>(
   'admin/fetchAllDishes',
   async () => {
-    const response = await axiosApi.get<ApiAnswer | null>('/dishes.json');
+    const response = await axiosApi.get<ApiDishes | null>('/dishes.json');
     const data = response.data;
+    if (response.status !== 200) {
+      console.log('TODO something');
+    }
     if (data) {
       const keys = Object.keys(data);
       return keys.map((id) => {
@@ -16,9 +19,6 @@ export const fetchDishes = createAsyncThunk<Dish[]>(
           id
         };
       });
-    }
-    if (response.status !== 200) {
-      console.log('TODO something');
     }
     return [];
   }
@@ -29,15 +29,15 @@ export const fetchDish = createAsyncThunk<Dish | null, string>(
   async (id) => {
     const response = await axiosApi.get<ApiDish | null>(`/dishes/${id}.json`);
     const data = response.data;
+    if (response.status !== 200) {
+      console.log('TODO something');
+    }
     if (data) {
       return {
         ...data,
         isDeleting: false,
         id
       };
-    }
-    if (response.status !== 200) {
-      console.log('TODO something');
     }
     return null;
   }
@@ -70,5 +70,26 @@ export const fetchDeleteDish = createAsyncThunk<void, string>(
     if (response.status !== 200) {
       console.log('TODO something');
     }
+  }
+);
+
+export const fetchOrders = createAsyncThunk<ApiOrder[]>(
+  'admin/fetchAllOrders',
+  async () => {
+    const response = await axiosApi.get<ApiOrders | null>('/orders.json');
+    const data = response.data;
+    if (response.status !== 200) {
+      console.log('TODO something');
+    }
+    if (data) {
+      const keys = Object.keys(data);
+      return keys.map((id): ApiOrder => {
+        return {
+          ...data[id],
+          id
+        };
+      });
+    }
+    return [];
   }
 );

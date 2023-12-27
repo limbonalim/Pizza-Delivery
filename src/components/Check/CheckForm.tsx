@@ -1,9 +1,8 @@
 import {ChangeEvent, FormEvent, useState} from 'react';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {clearChart, closeCheckForm, closeCheckoutModal, selectCart} from '../../store/clientSlice/clientSlice';
-import {ApiOrder, Contact} from '../../types';
+import {FormApiOrder, Contact} from '../../types';
 import {createOrder} from '../../store/clientSlice/clientThunks';
-
 
 const CheckForm = () => {
   const [client, setClient] = useState<Contact>({
@@ -31,7 +30,7 @@ const CheckForm = () => {
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-    const data: ApiOrder = {
+    const data: FormApiOrder = {
       order: cart,
       client
     };

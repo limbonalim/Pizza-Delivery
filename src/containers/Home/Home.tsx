@@ -1,28 +1,27 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect} from 'react';
 import {Link, useLocation} from 'react-router-dom';
 import MemoDish from '../../components/Dish/Dish';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {selectDishes} from '../../store/adminSlice/adminSlice';
 import {fetchDishes} from '../../store/adminSlice/adminThunks';
-import {getTotal, selectCart, showCheckoutModal} from '../../store/clientSlice/clientSlice';
+import {getTotal, selectCart, selectTotal, showCheckoutModal} from '../../store/clientSlice/clientSlice';
 import CheckModal from '../../components/Check/CheckModal';
 import './Home.css';
 
 const Home = () => {
-  const [total, setTotal] = useState(0);
+  const total = useAppSelector(selectTotal);
   const dishes = useAppSelector(selectDishes);
   const cart = useAppSelector(selectCart);
   const dispatch = useAppDispatch();
   const {pathname} = useLocation();
 
-  useMemo(() => {
+  useEffect(() => {
     let sum = dishes.reduce((acc, item) => {
       if (Object.keys(cart).includes(item.id)) {
         return acc + item.price * cart[item.id];
       }
       return acc;
     }, 0);
-    setTotal(sum);
     dispatch(getTotal(sum));
   }, [cart]);
 

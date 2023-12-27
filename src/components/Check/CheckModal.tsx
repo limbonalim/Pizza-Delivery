@@ -17,6 +17,7 @@ const CheckModal = () => {
     dispatch(closeCheckoutModal());
   };
 
+
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>

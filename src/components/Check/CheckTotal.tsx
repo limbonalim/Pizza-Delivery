@@ -1,5 +1,6 @@
-import {DELIVERY} from '../../constants';
+import {useEffect} from 'react';
 import {Button} from 'react-bootstrap';
+import {DELIVERY} from '../../constants';
 import CheckItem from './CheckItem';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {selectDishes} from '../../store/adminSlice/adminSlice';
@@ -58,9 +59,11 @@ const CheckTotal = () => {
     />
   )) : null;
 
-  if (Object.keys(cart).length === 0) {
-    dispatch(closeCheckoutModal());
-  }
+  useEffect(() => {
+    if (Object.keys(cart).length === 0) {
+      dispatch(closeCheckoutModal());
+    }
+  }, [cart]);
 
   return (
     <>
@@ -76,7 +79,7 @@ const CheckTotal = () => {
               Cancel
             </Button>
             <Button variant="primary" onClick={handleOrder}>
-              Order
+              Go to contact form
             </Button>
           </div>
         </div>
