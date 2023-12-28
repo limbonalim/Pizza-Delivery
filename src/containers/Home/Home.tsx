@@ -2,16 +2,18 @@ import React, {useEffect} from 'react';
 import {Link, useLocation} from 'react-router-dom';
 import MemoDish from '../../components/Dish/Dish';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import {selectDishes} from '../../store/adminSlice/adminSlice';
+import {selectDishes, selectIsDishesLoading} from '../../store/adminSlice/adminSlice';
 import {fetchDishes} from '../../store/adminSlice/adminThunks';
 import {getTotal, selectCart, selectTotal, showCheckoutModal} from '../../store/clientSlice/clientSlice';
 import CheckModal from '../../components/Check/CheckModal';
 import './Home.css';
+import Loading from '../../components/Loading/Loading';
 
 const Home = () => {
   const total = useAppSelector(selectTotal);
   const dishes = useAppSelector(selectDishes);
   const cart = useAppSelector(selectCart);
+  const loading = useAppSelector(selectIsDishesLoading);
   const dispatch = useAppDispatch();
   const {pathname} = useLocation();
 
@@ -57,7 +59,7 @@ const Home = () => {
     sumBlock = null;
   }
 
-  return (
+  return loading ? <Loading/> : (
     <>
       <div className="d-flex align-items-center justify-content-between mb-2">
         <h1>Dishes:</h1>

@@ -4,6 +4,7 @@ import {DELIVERY} from '../../constants';
 import './OrderItem.css';
 import {useAppDispatch} from '../../app/hooks';
 import {fetchDeleteOrder, fetchOrders} from '../../store/adminSlice/adminThunks';
+import {setDeletingOrder} from '../../store/adminSlice/adminSlice';
 
 
 interface Props {
@@ -28,6 +29,7 @@ const MemoOrderItem: React.FC<Props> = React.memo(function OrderItem({order}) {
   };
 
   const handleComplete = async () => {
+    dispatch(setDeletingOrder(order.id));
     await dispatch(fetchDeleteOrder(order.id));
     dispatch(fetchOrders());
   };
@@ -66,6 +68,7 @@ const MemoOrderItem: React.FC<Props> = React.memo(function OrderItem({order}) {
           >{isShowInfo ? 'Close' : 'Show'} info
           </button>
           <button
+            disabled={order.isDeleting}
             onClick={handleComplete}
             className="btn btn-outline-success"
           >Complete
@@ -75,7 +78,7 @@ const MemoOrderItem: React.FC<Props> = React.memo(function OrderItem({order}) {
     </div>
   );
 }, (prevProps, nextProps) => {
-  return (prevProps.order.id === nextProps.order.id) && (prevProps.order.client.name === nextProps.order.client.name);
+  return (prevProps.order.id === nextProps.order.id) && (prevProps.order.client.name === nextProps.order.client.name) && (prevProps.order.isDeleting === nextProps.order.isDeleting);
 });
 
 export default MemoOrderItem;

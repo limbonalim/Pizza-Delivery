@@ -1,6 +1,12 @@
 import {ChangeEvent, FormEvent, useState} from 'react';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import {clearChart, closeCheckForm, closeCheckoutModal, selectCart} from '../../store/clientSlice/clientSlice';
+import {
+  clearChart,
+  selectCart,
+  closeCheckForm,
+  closeCheckoutModal,
+  selectIsCreateOrder,
+} from '../../store/clientSlice/clientSlice';
 import {FormApiOrder, Contact} from '../../types';
 import {createOrder} from '../../store/clientSlice/clientThunks';
 
@@ -12,6 +18,7 @@ const CheckForm = () => {
   });
   const dispatch = useAppDispatch();
   const cart = useAppSelector(selectCart);
+  const isCreateOrder = useAppSelector(selectIsCreateOrder);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const {name, value} = e.target;
@@ -94,6 +101,7 @@ const CheckForm = () => {
           >Cancel
           </button>
           <button
+            disabled={isCreateOrder}
             className="btn btn-outline-success"
             type="submit"
           >Order

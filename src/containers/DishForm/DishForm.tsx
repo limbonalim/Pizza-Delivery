@@ -3,9 +3,10 @@ import {Link, useNavigate, useParams} from 'react-router-dom';
 import noImage from '../../assets/NoImage.png';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {createDish, fetchDish, fetchDishes, fetchEditDish} from '../../store/adminSlice/adminThunks';
-import {clearEditDish, selectEditDish} from '../../store/adminSlice/adminSlice';
+import {clearEditDish, selectEditDish, selectIsDishLoading} from '../../store/adminSlice/adminSlice';
 import {ApiDish, EditDish} from '../../types';
 import './DishForm.css';
+import Loading from '../../components/Loading/Loading';
 
 interface FormDish {
   title: string;
@@ -20,6 +21,7 @@ const DishForm = () => {
     image: ''
   });
   const dispatch = useAppDispatch();
+  const loading = useAppSelector(selectIsDishLoading);
   const editDish = useAppSelector(selectEditDish);
   const {id} = useParams();
   const navigate = useNavigate();
@@ -93,7 +95,7 @@ const DishForm = () => {
       />
     );
   }
-  return (
+  return loading ? <Loading/> : (
     <form onSubmit={onSubmit}>
       <h1 className="text-secondary">{id ? 'Edit dish' : 'Add new dish'}</h1>
       <div className="row mb-3">

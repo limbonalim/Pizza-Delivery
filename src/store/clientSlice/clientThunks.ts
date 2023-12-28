@@ -8,7 +8,7 @@ export const createOrder = createAsyncThunk<void, FormApiOrder>(
   async (order) => {
     const response = await axiosApi.post('/orders.json', order);
     if (response.status !== 200) {
-      console.log('TODO something');
+      throw new Error('Add Order is fail');
     }
   }
 );

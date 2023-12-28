@@ -7,12 +7,22 @@ interface AdminState {
   dishes: Dish[];
   orders: Order[];
   editDish: Dish | null;
+  isDishesLoading: boolean;
+  isDishLoading: boolean;
+  isOrdersLoading: boolean;
+  isShowAlert: boolean;
+  messageAlert: string;
 }
 
 const initialState: AdminState = {
   dishes: [],
   orders: [],
   editDish: null,
+  isDishesLoading: false,
+  isDishLoading: false,
+  isOrdersLoading: false,
+  isShowAlert: false,
+  messageAlert: '',
 };
 
 const adminSlice = createSlice({
@@ -26,51 +36,55 @@ const adminSlice = createSlice({
       const index = state.dishes.findIndex((item) => item.id === id);
       state.dishes[index].isDeleting = true;
     },
+    setDeletingOrder: (state, {payload: id}) => {
+      const index = state.orders.findIndex((item) => item.id === id);
+      state.orders[index].isDeleting = true;
+    },
+    adminCloseAlert: (state) => {
+      state.isShowAlert = false;
+      state.messageAlert = '';
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(fetchDishes.pending, (state) => {
-      console.log('[fetchDishes.pending] ' + state);
+      state.isDishesLoading = true;
     });
     builder.addCase(fetchDishes.fulfilled, (state, {payload: dishes}) => {
-      console.log('[fetchDishes.fulfilled] ' + state);
       state.dishes = dishes;
+      state.isDishesLoading = false;
     });
-    builder.addCase(fetchDishes.rejected, (state) => {
-      console.log('[fetchDishes.rejected] ' + state);
+    builder.addCase(fetchDishes.rejected, (state, {error}) => {
+      state.isDishesLoading = false;
+      state.isShowAlert = true;
+      state.messageAlert = error.message ? error.message : 'unknown error';
     });
     builder.addCase(fetchDish.pending, (state) => {
-      console.log('[fetchOne.pending] ' + state);
       state.editDish = null;
+      state.isDishLoading = true;
     });
     builder.addCase(fetchDish.fulfilled, (state, {payload: dish}) => {
-      console.log('[fetchOne.fulfilled] ' + state);
       state.editDish = dish;
+      state.isDishLoading = false;
     });
-    builder.addCase(fetchDish.rejected, (state) => {
-      console.log('[fetchOne.rejected] ' + state);
+    builder.addCase(fetchDish.rejected, (state, {error}) => {
+      state.isDishLoading = false;
+      state.isShowAlert = true;
+      state.messageAlert = error.message ? error.message : 'unknown error';
     });
-    builder.addCase(fetchDeleteDish.pending, (state) => {
-      console.log('[fetchDeleteDish.pending] ' + state);
-
-    });
-    builder.addCase(fetchDeleteDish.fulfilled, (state) => {
-      console.log('[fetchDeleteDish.fulfilled] ' + state);
-
-    });
-    builder.addCase(fetchDeleteDish.rejected, (state) => {
-      console.log('[fetchDeleteDish.rejected] ' + state);
+    builder.addCase(fetchDeleteDish.rejected, (state, {error}) => {
+      state.isShowAlert = true;
+      state.messageAlert = error.message ? error.message : 'unknown error';
     });
     builder.addCase(fetchOrders.pending, (state) => {
-      console.log('[fetchOrders.pending] ' + state);
-
+      state.isOrdersLoading = true;
     });
     builder.addCase(fetchOrders.fulfilled, (state, {payload: orders}) => {
-      console.log('[fetchOrders.fulfilled] ' + state);
       if (state.dishes.length > 0 && orders.length > 0) {
         state.orders = orders.map((item) => {
           return {
             client: item.client,
             id: item.id,
+            isDeleting: false,
             dishes: Object.keys(item.order).map((id) => {
               const index = state.dishes.findIndex((dish) => id === dish.id);
               if (index === -1) {
@@ -88,21 +102,17 @@ const adminSlice = createSlice({
             }),
           };
         });
+        state.isOrdersLoading = false;
       }
     });
-    builder.addCase(fetchOrders.rejected, (state) => {
-      console.log('[fetchOrders.rejected] ' + state);
+    builder.addCase(fetchOrders.rejected, (state, {error}) => {
+      state.isOrdersLoading = false;
+      state.isShowAlert = true;
+      state.messageAlert = error.message ? error.message : 'unknown error';
     });
-    builder.addCase(fetchDeleteOrder.pending, (state) => {
-      console.log('[fetchDeleteOrder.pending] ' + state);
-
-    });
-    builder.addCase(fetchDeleteOrder.fulfilled, (state) => {
-      console.log('[fetchDeleteOrder.fulfilled] ' + state);
-
-    });
-    builder.addCase(fetchDeleteOrder.rejected, (state) => {
-      console.log('[fetchDeleteOrder.rejected] ' + state);
+    builder.addCase(fetchDeleteOrder.rejected, (state, {error}) => {
+      state.isShowAlert = true;
+      state.messageAlert = error.message ? error.message : 'unknown error';
     });
   }
 });
@@ -110,6 +120,16 @@ const adminSlice = createSlice({
 export const selectDishes = (state: RootState) => state.admin.dishes;
 export const selectOrders = (state: RootState) => state.admin.orders;
 export const selectEditDish = (state: RootState) => state.admin.editDish;
+export const selectIsDishesLoading = (state: RootState) => state.admin.isDishesLoading;
+export const selectIsDishLoading = (state: RootState) => state.admin.isDishLoading;
+export const selectIsOrdersLoading = (state: RootState) => state.admin.isOrdersLoading;
+export const selectIsAdminShowAlert = (state: RootState) => state.admin.isShowAlert;
+export const selectAdminMessageAlert = (state: RootState) => state.admin.messageAlert;
 
-export const {clearEditDish, setDeletingDish} = adminSlice.actions;
+export const {
+  clearEditDish,
+  setDeletingDish,
+  setDeletingOrder,
+  adminCloseAlert,
+} = adminSlice.actions;
 export const adminReducers = adminSlice.reducer;

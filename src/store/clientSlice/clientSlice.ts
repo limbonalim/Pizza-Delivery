@@ -1,5 +1,5 @@
-import {Cart} from '../../types';
 import {createSlice} from '@reduxjs/toolkit';
+import {Cart} from '../../types';
 import {RootState} from '../../app/store';
 import {createOrder} from './clientThunks';
 
@@ -8,6 +8,9 @@ interface ClientState {
   total: number;
   isShowCheckoutModal: boolean;
   isShowCheckForm: boolean;
+  isCreateOrder: boolean;
+  isShowAlert: boolean;
+  messageAlert: string;
 }
 
 const initialState: ClientState = {
@@ -15,6 +18,9 @@ const initialState: ClientState = {
   total: 0,
   isShowCheckoutModal: false,
   isShowCheckForm: false,
+  isCreateOrder: false,
+  isShowAlert: false,
+  messageAlert: '',
 };
 
 const clientSlice = createSlice({
@@ -53,17 +59,23 @@ const clientSlice = createSlice({
     },
     getTotal: (state, {payload: total}) => {
       state.total = total;
+    },
+    closeAlert: (state) => {
+      state.isShowAlert = false;
+      state.messageAlert = '';
     }
   },
   extraReducers: (builder) => {
-    builder.addCase(createOrder.pending, state => {
-      console.log('[createOrder.pending]' + state);
+    builder.addCase(createOrder.pending, (state) => {
+      state.isCreateOrder = true;
     });
-    builder.addCase(createOrder.fulfilled, state => {
-      console.log('[createOrder.fulfilled]' + state);
+    builder.addCase(createOrder.fulfilled, (state) => {
+      state.isCreateOrder = false;
     });
-    builder.addCase(createOrder.rejected, state => {
-      console.log('[createOrder.rejected]' + state);
+    builder.addCase(createOrder.rejected, (state, {error}) => {
+      state.isCreateOrder = false;
+      state.isShowAlert = true;
+      state.messageAlert = error.message ? error.message : 'unknown error';
     });
   }
 });
@@ -72,6 +84,9 @@ export const selectCart = (state: RootState) => state.client.cart;
 export const selectTotal = (state: RootState) => state.client.total;
 export const selectIsShowCheckoutModal = (state: RootState) => state.client.isShowCheckoutModal;
 export const selectIsShowCheckForm = (state: RootState) => state.client.isShowCheckForm;
+export const selectIsCreateOrder = (state: RootState) => state.client.isCreateOrder;
+export const selectIsShowAlert = (state: RootState) => state.client.isShowAlert;
+export const selectMessageAlert = (state: RootState) => state.client.messageAlert;
 
 export const {
   addToCart,
@@ -82,6 +97,7 @@ export const {
   showCheckForm,
   closeCheckForm,
   getTotal,
+  closeAlert,
 } = clientSlice.actions;
 
 export const clientReducers = clientSlice.reducer;

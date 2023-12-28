@@ -41,6 +41,7 @@ export interface EditDish {
 
 export interface Order {
   id: string;
+  isDeleting: boolean;
   client: Contact;
   dishes: OrderDish[];
 }
