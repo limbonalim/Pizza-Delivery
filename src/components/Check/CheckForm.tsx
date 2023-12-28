@@ -1,4 +1,4 @@
-import {ChangeEvent, FormEvent, useState} from 'react';
+import {ChangeEvent, FormEvent, useEffect, useState} from 'react';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {
   clearChart,
@@ -19,6 +19,7 @@ const CheckForm = () => {
   const dispatch = useAppDispatch();
   const cart = useAppSelector(selectCart);
   const isCreateOrder = useAppSelector(selectIsCreateOrder);
+  const [disabled, setDisabled] = useState<boolean>(true);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const {name, value} = e.target;
@@ -29,6 +30,14 @@ const CheckForm = () => {
       };
     }));
   };
+
+  useEffect(() => {
+    if (client.name.length && client.address.length && client.phone.length) {
+      console.log('r')
+      setDisabled(false)
+    }
+  }, [client.name, client.address, client.phone]);
+
   const handleCansel = () => {
     dispatch(clearChart());
     dispatch(closeCheckForm());
@@ -101,7 +110,7 @@ const CheckForm = () => {
           >Cancel
           </button>
           <button
-            disabled={isCreateOrder}
+            disabled={disabled || isCreateOrder}
             className="btn btn-outline-success"
             type="submit"
           >Order
@@ -109,7 +118,6 @@ const CheckForm = () => {
         </div>
       </form>
     </>
-
   );
 };
 
