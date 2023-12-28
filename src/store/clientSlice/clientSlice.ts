@@ -1,4 +1,4 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {Cart} from '../../types';
 import {RootState} from '../../app/store';
 import {createOrder} from './clientThunks';
@@ -57,7 +57,7 @@ const clientSlice = createSlice({
     closeCheckForm: (state) => {
       state.isShowCheckForm = false;
     },
-    getTotal: (state, {payload: total}) => {
+    getTotal: (state, {payload: total}: PayloadAction<number>) => {
       state.total = total;
     },
     closeAlert: (state) => {

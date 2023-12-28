@@ -1,7 +1,7 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {fetchDeleteDish, fetchDeleteOrder, fetchDish, fetchDishes, fetchOrders} from './adminThunks';
 import {RootState} from '../../app/store';
-import {Dish, Order} from '../../types';
+import {ApiOrder, Dish, Order} from '../../types';
 
 interface AdminState {
   dishes: Dish[];
@@ -32,11 +32,11 @@ const adminSlice = createSlice({
     clearEditDish: (state) => {
       state.editDish = null;
     },
-    setDeletingDish: (state, {payload: id}) => {
+    setDeletingDish: (state, {payload: id}: PayloadAction<string>) => {
       const index = state.dishes.findIndex((item) => item.id === id);
       state.dishes[index].isDeleting = true;
     },
-    setDeletingOrder: (state, {payload: id}) => {
+    setDeletingOrder: (state, {payload: id}: PayloadAction<string>) => {
       const index = state.orders.findIndex((item) => item.id === id);
       state.orders[index].isDeleting = true;
     },
@@ -49,7 +49,7 @@ const adminSlice = createSlice({
     builder.addCase(fetchDishes.pending, (state) => {
       state.isDishesLoading = true;
     });
-    builder.addCase(fetchDishes.fulfilled, (state, {payload: dishes}) => {
+    builder.addCase(fetchDishes.fulfilled, (state, {payload: dishes}: PayloadAction<Dish[]>) => {
       state.dishes = dishes;
       state.isDishesLoading = false;
     });
@@ -62,7 +62,7 @@ const adminSlice = createSlice({
       state.editDish = null;
       state.isDishLoading = true;
     });
-    builder.addCase(fetchDish.fulfilled, (state, {payload: dish}) => {
+    builder.addCase(fetchDish.fulfilled, (state, {payload: dish}: PayloadAction<Dish | null>) => {
       state.editDish = dish;
       state.isDishLoading = false;
     });
@@ -78,7 +78,7 @@ const adminSlice = createSlice({
     builder.addCase(fetchOrders.pending, (state) => {
       state.isOrdersLoading = true;
     });
-    builder.addCase(fetchOrders.fulfilled, (state, {payload: orders}) => {
+    builder.addCase(fetchOrders.fulfilled, (state, {payload: orders}: PayloadAction<ApiOrder[]>) => {
       if (state.dishes.length > 0 && orders.length > 0) {
         state.orders = orders.map((item) => {
           return {
