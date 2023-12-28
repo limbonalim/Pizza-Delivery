@@ -1,7 +1,24 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {axiosApi} from '../../axios-Api';
-import {ApiDishes, ApiDish, Dish, EditDish, ApiOrders, ApiOrder} from '../../types';
+import {ApiDishes, Dish, EditDish, ApiOrders, ApiOrdersAndDishes, ApiDish} from '../../types';
 
+const getData = (keys: string[], data: ApiDishes | ApiOrders, isDish = false) => {
+  if (isDish) {
+    return keys.map((id) => {
+      return {
+        ...data[id],
+        isDeleting: false,
+        id
+      };
+    });
+  }
+  return keys.map((id) => {
+    return {
+      ...data[id],
+      id
+    };
+  });
+};
 
 export const fetchDishes = createAsyncThunk<Dish[]>(
   'admin/fetchAllDishes',
@@ -13,12 +30,7 @@ export const fetchDishes = createAsyncThunk<Dish[]>(
     }
     if (data) {
       const keys = Object.keys(data);
-      return keys.map((id) => {
-        return {
-          ...data[id],
-          id
-        };
-      });
+      return getData(keys, data, true);
     }
     return [];
   }
@@ -73,24 +85,26 @@ export const fetchDeleteDish = createAsyncThunk<void, string>(
   }
 );
 
-export const fetchOrders = createAsyncThunk<ApiOrder[]>(
+export const fetchOrders = createAsyncThunk<ApiOrdersAndDishes | null>(
   'admin/fetchAllOrders',
   async () => {
-    const response = await axiosApi.get<ApiOrders | null>('/orders.json');
-    const data = response.data;
-    if (response.status !== 200) {
+    const responseOrders = await axiosApi.get<ApiOrders | null>('/orders.json');
+    const responseDishes = await axiosApi.get<ApiDishes | null>('/dishes.json');
+    const dataOrders = responseOrders.data;
+    const dataDishes = responseDishes.data;
+    if (responseOrders.status !== 200 || responseDishes.status !== 200) {
       throw new Error('Get Orders is fail');
     }
-    if (data) {
-      const keys = Object.keys(data);
-      return keys.map((id): ApiOrder => {
-        return {
-          ...data[id],
-          id
-        };
-      });
+
+    if (dataOrders && dataDishes) {
+      const keysOrders = Object.keys(dataOrders);
+      const keysDishes = Object.keys(dataDishes);
+      return {
+        orders: getData(keysOrders, dataOrders),
+        dishes: getData(keysDishes, dataDishes, true),
+      };
     }
-    return [];
+    return null;
   }
 );
 

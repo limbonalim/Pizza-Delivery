@@ -16,6 +16,11 @@ export interface Contact {
   phone: string;
 }
 
+export interface ApiOrdersAndDishes {
+  orders: ApiOrder[];
+  dishes: Dish[];
+}
+
 export interface ApiOrder {
   id: string;
   order: Cart;
@@ -32,7 +37,7 @@ export interface Dish {
   isDeleting: boolean;
 }
 
-export type ApiDish = Omit<Dish, 'id', 'isDeleting'>
+export type ApiDish = Omit<Dish, 'id', 'isDeleting'>;
 
 export interface EditDish {
   id: string;

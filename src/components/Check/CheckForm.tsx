@@ -33,8 +33,7 @@ const CheckForm = () => {
 
   useEffect(() => {
     if (client.name.length && client.address.length && client.phone.length) {
-      console.log('r')
-      setDisabled(false)
+      setDisabled(false);
     }
   }, [client.name, client.address, client.phone]);
 

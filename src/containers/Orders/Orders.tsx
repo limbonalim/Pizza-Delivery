@@ -1,6 +1,6 @@
 import {useEffect} from 'react';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import {fetchDishes, fetchOrders} from '../../store/adminSlice/adminThunks';
+import {fetchOrders} from '../../store/adminSlice/adminThunks';
 import {selectIsDishesLoading, selectIsOrdersLoading, selectOrders} from '../../store/adminSlice/adminSlice';
 import MemoOrderItem from './OrderItem';
 import Loading from '../../components/Loading/Loading';
@@ -11,10 +11,6 @@ const Orders = () => {
   const orders = useAppSelector(selectOrders);
   const isOrdersLoading = useAppSelector(selectIsOrdersLoading);
   const isDishesLoading = useAppSelector(selectIsDishesLoading);
-
-  useEffect(() => {
-    dispatch(fetchDishes());
-  }, []);
 
   useEffect(() => {
     dispatch(fetchOrders());

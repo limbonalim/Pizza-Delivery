@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {fetchDeleteDish, fetchDeleteOrder, fetchDish, fetchDishes, fetchOrders} from './adminThunks';
 import {RootState} from '../../app/store';
-import {ApiOrder, Dish, Order} from '../../types';
+import {ApiOrdersAndDishes, Dish, Order} from '../../types';
 
 interface AdminState {
   dishes: Dish[];
@@ -51,6 +51,7 @@ const adminSlice = createSlice({
     });
     builder.addCase(fetchDishes.fulfilled, (state, {payload: dishes}: PayloadAction<Dish[]>) => {
       state.dishes = dishes;
+
       state.isDishesLoading = false;
     });
     builder.addCase(fetchDishes.rejected, (state, {error}) => {
@@ -78,15 +79,15 @@ const adminSlice = createSlice({
     builder.addCase(fetchOrders.pending, (state) => {
       state.isOrdersLoading = true;
     });
-    builder.addCase(fetchOrders.fulfilled, (state, {payload: orders}: PayloadAction<ApiOrder[]>) => {
-      if (state.dishes.length > 0 && orders.length > 0) {
-        state.orders = orders.map((item) => {
+    builder.addCase(fetchOrders.fulfilled, (state, {payload: data}: PayloadAction<ApiOrdersAndDishes | null>) => {
+      if (data) {
+        state.orders = data.orders.map((item) => {
           return {
             client: item.client,
             id: item.id,
             isDeleting: false,
             dishes: Object.keys(item.order).map((id) => {
-              const index = state.dishes.findIndex((dish) => id === dish.id);
+              const index = data.dishes.findIndex((dish) => id === dish.id);
               if (index === -1) {
                 return {
                   title: 'ERROR!',
@@ -94,16 +95,17 @@ const adminSlice = createSlice({
                   price: 0
                 };
               }
+
               return {
-                title: state.dishes[index].title,
+                title: data.dishes[index].title,
                 quantity: item.order[id],
-                price: state.dishes[index].price
+                price: data.dishes[index].price
               };
-            }),
+            })
           };
         });
-        state.isOrdersLoading = false;
       }
+      state.isOrdersLoading = false;
     });
     builder.addCase(fetchOrders.rejected, (state, {error}) => {
       state.isOrdersLoading = false;
